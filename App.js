@@ -1,52 +1,159 @@
-import { ColorModeContext, useMode } from "./theme";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { Routes, Route } from "react-router-dom";
-import Topbar from "./scenes/global/Topbar";
-import Sidebar from "./scenes/global/Sidebar";
-import Dashboard from "./scenes/dashboard";
-import Team from "./scenes/team";
-import Contacts from "./scenes/contacts";
-import Invoices from "./scenes/invoices";
-import Form from "./scenes/form";
-import Calendar from "./scenes/calendar";
-import FAQ from "./scenes/faq";
-import Bar from "./scenes/bar";
-import Line from "./scenes/line";
-import Pie from "./scenes/pie";
-//import Geography from "./scenes/geography";
+import * as React from 'react';
+import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
-function App() {
-  const [theme, colorMode] = useMode();
-
+function Copyright(props) {
   return (
-  <ColorModeContext.Provider value={colorMode}>
-    <ThemeProvider theme = {theme}>
-      <CssBaseline/>
-    <div className="app">
-      <Sidebar/>
-        <main className="content">
-          <Topbar/>
-          <Routes>
-            <Route path="/" element={<Dashboard/>}/>
-            <Route path="/team" element={<Team/>} />
-            <Route path="/contacts" element={<Contacts/>} />
-            <Route path="/invoices" element={<Invoices/>}/>
-            <Route path="/form" element={<Form/>}/>
-            <Route path="/calendar" element={<Calendar/>} />
-            <Route path="/faq" element={<FAQ/>}/>
-            <Route path="/bar" element={<Bar/>}/>
-            <Route path="/pie" element={<Pie/>} />
-            <Route path="/line" element={<Line/>} />
-            {/*<Route path="/geography" element={<Geography/>} />*/}
-          </Routes>
-        </main>
-      </div>
-    </ThemeProvider>
-    </ColorModeContext.Provider>
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © '}
+      <Link color="inherit" href="https://mui.com/">
+        Nexus Crypto
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
   );
-  
 }
 
-export default App;
+// Define admin and user credentials
+const credentials = {
+  admin: {
+    email: 'admin@example.com',
+    password: 'adminpassword',
+  },
+  user: {
+    email: 'user@example.com',
+    password: 'userpassword',
+  },
+};
 
+const defaultTheme = createTheme();
+
+export default function SignInSide() {
+  const [error, setError] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const email = data.get('email');
+    const password = data.get('password');
+
+    // Check if entered credentials match admin
+    if (email === credentials.admin.email && password === credentials.admin.password) {
+      // Redirect to admin page
+      window.location.href = 'http://localhost:3000';
+    }
+    // Check if entered credentials match user
+    else if (email === credentials.user.email && password === credentials.user.password) {
+      // Redirect to user page
+      window.location.href = 'http://localhost:3001';
+    } else {
+      // Display error for incorrect credentials
+      setError(true);
+    }
+  };
+
+  return (
+    <ThemeProvider theme={defaultTheme}>
+      <Grid container component="main" sx={{ height: '100vh' }}>
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              {error && (
+                <Typography variant="body2" color="error" align="center">
+                  Invalid email or password. Please try again.
+                </Typography>
+              )}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+              <Copyright sx={{ mt: 5 }} />
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+  );
+}
