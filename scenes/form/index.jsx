@@ -1,20 +1,50 @@
-import { Box, Button, TextField } from "@mui/material";
+import React, { useState } from 'react';
+import { Box, Button, TextField, Typography, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 
-const Report = () => {
+const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
+  const [openDialog, setOpenDialog] = useState(false); // State for dialog
+
+  // Define validation schema using yup
+  const checkoutSchema = yup.object().shape({
+    firstName: yup.string().required("First Name is required"),
+    lastName: yup.string().required("Last Name is required"),
+    email: yup.string().email("Invalid email").required("Email is required"),
+    contact: yup.string().required("Contact number is required"),
+    staffHours: yup.number().required("Staff hours are required").positive("Hours must be positive"),
+    volunteerHours: yup.number().required("Volunteer hours are required").positive("Hours must be positive"),
+    department: yup.string().required("Department is required"),
+    eventDescription: yup.string().required("Event description is required"),
+  });
+
+  // Initial values for the form fields
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    contact: "",
+    staffHours: "",
+    volunteerHours: "",
+    department: "",
+    eventDescription: "",
+  };
 
   const handleFormSubmit = (values) => {
-    console.log(values);
+    console.log(values); // Log values to console (or handle form submission logic)
+    setOpenDialog(true); // Open confirmation dialog
   };
-  
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false); // Close confirmation dialog
+  };
 
   return (
     <Box m="20px">
-      <Header title="CREATE USER" subtitle="Create a New User Profile" />
+      <Header title="Reports" subtitle="Create a Report" />
 
       <Formik
         onSubmit={handleFormSubmit}
@@ -93,27 +123,60 @@ const Report = () => {
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
-                label="Address 1"
+                type="number"
+                label="Staff Hours"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.address1}
-                name="address1"
-                error={!!touched.address1 && !!errors.address1}
-                helperText={touched.address1 && errors.address1}
+                value={values.staffHours}
+                name="staffHours"
+                error={!!touched.staffHours && !!errors.staffHours}
+                helperText={touched.staffHours && errors.staffHours}
                 sx={{ gridColumn: "span 4" }}
               />
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
-                label="Address 2"
+                type="number"
+                label="Volunteer Hours"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.address2}
-                name="address2"
-                error={!!touched.address2 && !!errors.address2}
-                helperText={touched.address2 && errors.address2}
+                value={values.volunteerHours}
+                name="volunteerHours"
+                error={!!touched.volunteerHours && !!errors.volunteerHours}
+                helperText={touched.volunteerHours && errors.volunteerHours}
+                sx={{ gridColumn: "span 4" }}
+              />
+              <TextField
+                select
+                fullWidth
+                variant="filled"
+                label="Departments"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.department}
+                name="department"
+                error={!!touched.department && !!errors.department}
+                helperText={touched.department && errors.department}
+                sx={{ gridColumn: "span 4" }}
+              >
+                <MenuItem value="">Select Department</MenuItem>
+                <MenuItem value="Pediactrics">Pediactrics</MenuItem>
+                <MenuItem value="Oncology">Oncology</MenuItem>
+                <MenuItem value="Rheumatology">Rheumatology</MenuItem>
+                <MenuItem value="Gastroenterology">Gastroenterology</MenuItem>
+                {/* Add more departments as needed */}
+              </TextField>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Event Description"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.eventDescription}
+                name="eventDescription"
+                error={!!touched.eventDescription && !!errors.eventDescription}
+                helperText={touched.eventDescription && errors.eventDescription}
                 sx={{ gridColumn: "span 4" }}
               />
             </Box>
@@ -125,31 +188,23 @@ const Report = () => {
           </form>
         )}
       </Formik>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Make sure information is put in accurately for admin!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
 
-const phoneRegExp =
-  /^((\+[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
-
-const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  contact: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  address1: yup.string().required("required"),
-  address2: yup.string().required("required"),
-});
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  contact: "",
-  address1: "",
-  address2: "",
-};
-
-export default Report;
+export default Form;

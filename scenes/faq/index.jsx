@@ -22,7 +22,7 @@ const FAQ = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Are your reports accurate?
+          Are we properly documenting our charitable activities and grants?
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -34,7 +34,7 @@ const FAQ = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Why have we not hired Nexus Crypto yet?
+          Are we adequately informing the public about our activities and finances?
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -46,19 +46,19 @@ const FAQ = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            What will the next event be?
+          Are we filing our annual information returns (Form 990, Form 990-EZ, or Form 990-N)?
           </Typography>
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography color={colors.greenAccent[500]} variant="h5">
-            Some Random Question
+            Are the reports clear?
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Will the Chiefs three-peat?
+          Are our financial reports and disclosures clear and understandable?
           </Typography>
         </AccordionDetails>
       </Accordion>
@@ -70,7 +70,7 @@ const FAQ = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            Are we ready for the next event? 
+            Did we talk to the Admin for any updates 
           </Typography>
         </AccordionDetails>
       </Accordion>

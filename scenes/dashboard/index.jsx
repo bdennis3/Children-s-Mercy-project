@@ -36,7 +36,7 @@ const Dashboard = () => {
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             
-            <a href={downloadLink} download> Tax Download Reports</a>
+            <a href={downloadLink} download>Download Reports</a>
           </Button>
         </Box>
       </Box>
@@ -77,7 +77,7 @@ const Dashboard = () => {
         >
           <StatBox
             title="431,225"
-            subtitle="Donations Obtained"
+            subtitle="Person's Served"
             progress="0.50"
             increase="+21%"
             icon={
@@ -182,7 +182,7 @@ const Dashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Hours
+              Hours Tracker
             </Typography>
           </Box>
           {mockTransactions.map((transaction, i) => (
@@ -219,7 +219,7 @@ const Dashboard = () => {
         </Box>
 
         {/* ROW 3 */}
-        <Box
+        {/*<Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -255,13 +255,13 @@ const Dashboard = () => {
             fontWeight="600"
             sx={{ padding: "30px 30px 0 30px" }}
           >
-            Person's Served
+            Persons Served
           </Typography>
           <Box height="250px" mt="-20px">
             <BarChart isDashboard={true} />
           </Box>
         </Box>
-        <Box
+        {/*<Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -277,7 +277,7 @@ const Dashboard = () => {
           <Box height="200px">
             <GeographyChart isDashboard={true} />
           </Box>
-        </Box>
+        </Box>*/}
       </Box>
     </Box>
   );

@@ -1,3 +1,4 @@
+import React from 'react';
 import { ResponsivePie } from "@nivo/pie";
 import { tokens } from "../theme";
 import { useTheme } from "@mui/material";
@@ -6,6 +7,7 @@ import { mockPieData as data } from "../data/mockData";
 const PieChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   return (
     <ResponsivePie
       data={data}
@@ -96,12 +98,21 @@ const PieChart = () => {
             {
               on: "hover",
               style: {
-                itemTextColor: "#000",
+                value: "#000",
               },
             },
           ],
         },
       ]}
+      tooltip={({ datum }) => (
+        <div style={{ 
+          background: 'white', 
+          padding: '10px', 
+          border: '1px solid #ccc' 
+        }}>
+          <strong>{datum.id}</strong>: {datum.value}
+        </div>
+      )}
     />
   );
 };

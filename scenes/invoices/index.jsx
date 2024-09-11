@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Select, MenuItem } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataInvoices } from "../../data/mockData";
@@ -8,13 +8,37 @@ import Header from "../../components/Header";
 const Invoices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [invoices, setInvoices] = useState(mockDataInvoices); // State for invoices data
+
+  // State to hold the invoices data
+  const [invoices, setInvoices] = useState(mockDataInvoices);
+
+  // Function to handle type change
+  const handleTypeChange = (id, value) => {
+    // Update invoices state with the selected type
+    const updatedInvoices = invoices.map(row => 
+      row.id === id ? { ...row, type: value } : row
+    );
+    setInvoices(updatedInvoices);
+  };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 100 },
-    { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell" },
-    { field: "phone", headerName: "Phone Number", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1 },
+    { field: "id", headerName: "ID" },
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1,
+      cellClassName: "name-column--cell",
+    },
+    {
+      field: "phone",
+      headerName: "Phone Number",
+      flex: 1,
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 1,
+    },
     {
       field: "cost",
       headerName: "Hours",
@@ -25,37 +49,32 @@ const Invoices = () => {
         </Typography>
       ),
     },
-    { field: "department", headerName: "Department", flex: 1 },
-    { field: "date", headerName: "Date", flex: 1 },
+    {
+      field: "type",
+      headerName: "Type",
+      flex: 1,
+      renderCell: (params) => (
+        <Select
+          value={params.row.type || ""}
+          onChange={(e) => handleTypeChange(params.row.id, e.target.value)}
+          fullWidth
+          variant="outlined"
+        >
+          <MenuItem value="volunteer">Volunteer Hours</MenuItem>
+          <MenuItem value="work">Work Hours</MenuItem>
+        </Select>
+      ),
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 1,
+    },
   ];
-
-  const handleUpdate = async () => {
-    try {
-      // Example of updating data from backend (replace with actual API call)
-      const response = await fetch('http://localhost:3001/form', {
-        method: 'POST', // Adjust method as needed (e.g., POST for creation)
-        headers: {
-          'Content-Type': 'application/json',
-          // Add authorization headers if needed
-        },
-        body: JSON.stringify({ /* Data to update */ }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update data');
-      }
-
-      // Optionally, update local state or fetch new data
-      // Example: setInvoices(newInvoices);
-    } catch (error) {
-      console.error('Error updating data:', error);
-      // Handle error state or alert user
-    }
-  };
 
   return (
     <Box m="20px">
-      <Header title="INVOICES" subtitle="List of Invoice Balances" />
+      <Header title="Hours" subtitle="List of Invoice Balances" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -85,16 +104,11 @@ const Invoices = () => {
           },
         }}
       >
-        <Box display="flex" justifyContent="flex-end" mb={2}>
-          <Button variant="contained" color="primary" onClick={handleUpdate}>
-            Update Invoices
-          </Button>
-        </Box>
-        <DataGrid
-          rows={invoices}
-          columns={columns}
-          checkboxSelection
-          disableSelectionOnClick
+        <DataGrid 
+          checkboxSelection 
+          rows={invoices} // Use the invoices state here
+          columns={columns} 
+          rowHeight={45} 
         />
       </Box>
     </Box>

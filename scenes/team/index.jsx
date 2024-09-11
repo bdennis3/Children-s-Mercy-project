@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Box, Typography, useTheme, Select, MenuItem } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
@@ -11,28 +10,6 @@ import Header from "../../components/Header";
 const Team = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  
-  // State to manage updated data with access level changes
-  const [updatedData, setUpdatedData] = useState(mockDataTeam);
-  const [editRowId, setEditRowId] = useState(null); // State to track which row is being edited
-
-  // Function to handle access level change
-  const handleAccessLevelChange = (id, newAccessLevel) => {
-    const updatedTeam = updatedData.map(member => {
-      if (member.id === id) {
-        return { ...member, accessLevel: newAccessLevel };
-      }
-      return member;
-    });
-    setUpdatedData(updatedTeam);
-    setEditRowId(null); // Reset edit state after saving
-  };
-
-  // Click handler to initiate editing
-  const handleAccessLevelClick = (id) => {
-    setEditRowId(id);
-  };
-
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -56,18 +33,8 @@ const Team = () => {
       field: "accessLevel",
       headerName: "Access Level",
       flex: 1,
-      renderCell: ({ row }) => (
-        editRowId === row.id ? (
-          <Select
-            value={row.accessLevel}
-            onChange={(e) => handleAccessLevelChange(row.id, e.target.value)}
-            fullWidth
-          >
-            <MenuItem value="admin">Admin</MenuItem>
-            <MenuItem value="manager">Manager</MenuItem>
-            <MenuItem value="user">User</MenuItem>
-          </Select>
-        ) : (
+      renderCell: ({ row: { access } }) => {
+        return (
           <Box
             width="60%"
             m="0 auto"
@@ -75,25 +42,23 @@ const Team = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              row.accessLevel === "admin"
+              access === "admin"
                 ? colors.greenAccent[600]
-                : row.accessLevel === "manager"
+                : access === "manager"
                 ? colors.greenAccent[700]
                 : colors.greenAccent[700]
             }
             borderRadius="4px"
-            onClick={() => handleAccessLevelClick(row.id)}
-            style={{ cursor: "pointer" }} // Add cursor pointer for interaction
           >
-            {row.accessLevel === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {row.accessLevel === "manager" && <SecurityOutlinedIcon />}
-            {row.accessLevel === "user" && <LockOpenOutlinedIcon />}
+            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
+            {access === "manager" && <SecurityOutlinedIcon />}
+            {access === "user" && <LockOpenOutlinedIcon />}
             <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {row.accessLevel}
+              {access}
             </Typography>
           </Box>
-        )
-      ),
+        );
+      },
     },
   ];
 
@@ -124,14 +89,12 @@ const Team = () => {
             borderTop: "none",
             backgroundColor: colors.blueAccent[700],
           },
+          "& .MuiCheckbox-root": {
+            color: `${colors.greenAccent[200]} !important`,
+          },
         }}
       >
-        <DataGrid 
-          checkboxSelection 
-          rows={updatedData} 
-          columns={columns} 
-          rowHeight={45} // Adjust row height as needed
-        />
+        <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
       </Box>
     </Box>
   );
